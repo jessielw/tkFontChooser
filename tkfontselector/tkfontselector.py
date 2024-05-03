@@ -55,18 +55,19 @@ class FontSelector(Toplevel):
         """
         super().__init__(master, **kwargs)
         self.title(title)
-        self.resizable(False, False)
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self._validate_family = self.register(self.validate_font_family)
         self._validate_size = self.register(self.validate_font_size)
+
+        self.grid_columnconfigure((0, 2), weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=500)
 
         # --- variable storing the chosen font
         self.res = ""
 
         style = Style(self)
         style.configure("prev.TLabel", background="white")
-        bg = style.lookup("TLabel", "background")
-        self.configure(bg=bg)
 
         # --- family list
         if fixed_only:
@@ -77,7 +78,6 @@ class FontSelector(Toplevel):
         self.fonts.sort()
         for i in range(len(self.fonts)):
             self.fonts[i] = self.fonts[i].replace(" ", "\ ")
-        max_length = int(2.5 * max([len(font) for font in self.fonts])) // 3
         self.sizes = ["%i" % i for i in (list(range(6, 17)) + list(range(18, 32, 2)))]
         # --- font default
         font_dict["weight"] = font_dict.get("weight", "normal")
@@ -128,7 +128,6 @@ class FontSelector(Toplevel):
         self.var_size = StringVar(self)
         self.entry_family = Entry(
             self,
-            width=max_length,
             validate="key",
             validatecommand=(self._validate_family, "%d", "%S", "%i", "%s", "%V"),
         )
@@ -145,7 +144,6 @@ class FontSelector(Toplevel):
             listvariable=self.font_family,
             highlightthickness=0,
             exportselection=False,
-            width=max_length,
         )
         self.list_size = Listbox(
             self,
@@ -153,7 +151,6 @@ class FontSelector(Toplevel):
             listvariable=self.font_size,
             highlightthickness=0,
             exportselection=False,
-            width=4,
         )
         scroll_family = Scrollbar(
             self, orient="vertical", command=self.list_family.yview
@@ -197,15 +194,19 @@ class FontSelector(Toplevel):
             # size not in list
             pass
 
-        self.entry_family.grid(row=0, column=0, sticky="ew", pady=(10, 1), padx=(10, 0))
-        self.entry_size.grid(row=0, column=2, sticky="ew", pady=(10, 1), padx=(10, 0))
+        self.entry_family.grid(
+            row=0, column=0, sticky="ews", pady=(10, 1), padx=(10, 0)
+        )
+        self.entry_size.grid(row=0, column=2, sticky="ews", pady=(10, 1), padx=(10, 0))
         self.list_family.grid(
             row=1, column=0, sticky="nsew", pady=(1, 10), padx=(10, 0)
         )
         self.list_size.grid(row=1, column=2, sticky="nsew", pady=(1, 10), padx=(10, 0))
-        scroll_family.grid(row=1, column=1, sticky="ns", pady=(1, 10))
-        scroll_size.grid(row=1, column=3, sticky="ns", pady=(1, 10))
-        options_frame.grid(row=0, column=4, rowspan=2, padx=10, pady=10, ipadx=10)
+        scroll_family.grid(row=1, column=1, sticky="nsw", pady=(1, 10))
+        scroll_size.grid(row=1, column=3, sticky="nsw", pady=(1, 10))
+        options_frame.grid(
+            row=0, column=4, rowspan=2, padx=10, pady=10, ipadx=10, sticky="nsew"
+        )
 
         self.preview.grid(
             row=2,
@@ -222,10 +223,10 @@ class FontSelector(Toplevel):
         button_frame.grid(row=3, column=0, columnspan=5, pady=(0, 10), padx=10)
 
         Button(button_frame, text="Ok", command=self.ok).grid(
-            row=0, column=0, padx=4, sticky="ew"
+            row=0, column=0, padx=14, sticky="ew"
         )
         Button(button_frame, text=TR["Cancel"], command=self.quit).grid(
-            row=0, column=1, padx=4, sticky="ew"
+            row=0, column=1, padx=14, sticky="ew"
         )
         self.list_family.bind("<<ListboxSelect>>", self.update_entry_family)
         self.list_size.bind("<<ListboxSelect>>", self.update_entry_size, add=True)
