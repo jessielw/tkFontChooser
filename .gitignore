@@ -8,3 +8,4 @@ htmlcov
 .coverage
 *.pyc
 _build
+.vscode/
