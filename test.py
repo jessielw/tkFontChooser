@@ -1,6 +1,6 @@
 import unittest
 import logging
-from tk_font_selector import FontSelector, ask_font
+from tkfontselector import FontSelector, ask_font
 from tkinter import Toplevel, ttk
 from tkinter import font as tkFont
 

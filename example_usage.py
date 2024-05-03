@@ -1,6 +1,6 @@
 from tkinter import Tk, ttk
 from sys import platform
-from tk_font_selector.ask_font import ask_font
+from tkfontselector.ask_font import ask_font
 
 EXAMPLE_FONT_FAMILY = {
     "family": "Comic Sans MS",

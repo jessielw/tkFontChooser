@@ -1,4 +1,4 @@
-from tk_font_selector.tkfontselector import FontSelector
+from tkfontselector.tkfontselector import FontSelector
 
 
 def ask_font(

@@ -22,7 +22,7 @@ is returned as a dictionary like the one returned by the function
 ## Documentation
 
 ```python
-from tk_font_selector import ask_font
+from tkfontselector import ask_font
 
 ask_font(master=None, text="Abcd", title="Font Chooser", **font_args)
 ```

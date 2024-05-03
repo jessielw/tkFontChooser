@@ -9,7 +9,7 @@ from tkinter.font import families, Font
 from locale import getlocale
 from typing import Union, List
 
-from tk_font_selector.translations import LANGUAGES
+from tkfontselector.translations import LANGUAGES
 
 try:
     lang_code = getlocale()[0][:2]
