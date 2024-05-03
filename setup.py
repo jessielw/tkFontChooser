@@ -1,36 +1,36 @@
+import os
 from setuptools import setup
 
-from codecs import open
-from os import path
+CLASSIFIERS = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Natural Language :: English",
+    "Natural Language :: French",
+    "Natural Language :: Italian",
+    "Natural Language :: Russian",
+    "Natural Language :: Spanish",
+    "Operating System :: OS Independent",
+]
 
-here = path.abspath(path.dirname(__file__))
+with open(os.path.join(os.path.dirname(__file__), "README.md")) as fd:
+    ext_long_desc = fd.read()
 
-with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
-    long_description = f.read()
-
-setup(name='tkfontchooser',
-      version='2.0.3',
-      description='Simple font chooser for Tkinter',
-      long_description=long_description,
-      url='https://github.com/j4321/tkFontChooser',
-      author='Juliette Monsel',
-      author_email='j_4321@protonmail.com',
-      license='GPLv3',
-      classifiers=['Development Status :: 5 - Production/Stable',
-                   'Intended Audience :: Developers',
-                   'Topic :: Software Development :: Widget Sets',
-                   'Topic :: Software Development :: Libraries :: Python Modules',
-                   'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
-                   'Programming Language :: Python :: 2',
-                   'Programming Language :: Python :: 2.6',
-                   'Programming Language :: Python :: 2.7',
-                   'Programming Language :: Python :: 3',
-                   'Programming Language :: Python :: 3.4',
-                   'Programming Language :: Python :: 3.5',
-                   'Programming Language :: Python :: 3.6',
-                   'Natural Language :: English',
-                   'Natural Language :: French',
-                   'Natural Language :: Italian',
-                   'Operating System :: OS Independent'],
-      keywords=['tkinter', 'font', 'fontchooser'],
-      py_modules=["tkfontchooser"])
+setup(
+    name="tkFontSelector",
+    version="1.0.0",
+    description="Simple font chooser for Tkinter",
+    long_description=ext_long_desc,
+    long_description_content_type="text/markdown",
+    url="https://github.com/jlw4049/tkFontChooser",
+    author="Jessie Wilson",
+    author_email="jessielw4049@gmail.com",
+    license="MIT",
+    classifiers=CLASSIFIERS,
+    keywords=["tkFontSelector", "tkinter", "font", "fontchooser"],
+    packages=["tk_font_selector"],
+)
