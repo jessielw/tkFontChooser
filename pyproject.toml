@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "tkfontchooser"
+version = "1.0.0"
+description = "Tkinter Font Chooser"
+authors = ["jlw4049 <jlw_4049@hotmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
