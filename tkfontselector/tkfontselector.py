@@ -195,9 +195,9 @@ class FontSelector(Toplevel):
             pass
 
         self.entry_family.grid(
-            row=0, column=0, sticky="ews", pady=(10, 1), padx=(10, 0)
+            row=0, column=0, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0)
         )
-        self.entry_size.grid(row=0, column=2, sticky="ews", pady=(10, 1), padx=(10, 0))
+        self.entry_size.grid(row=0, column=2, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0))
         self.list_family.grid(
             row=1, column=0, sticky="nsew", pady=(1, 10), padx=(10, 0)
         )
