@@ -9,3 +9,5 @@ htmlcov
 *.pyc
 _build
 .vscode/
+.pypirc
+example_upload_pypi.txt
