@@ -43,15 +43,17 @@ dictionary is similar to the one returned by the `actual` method of a tkinter
 
 ## General arguments
 
-`master`: Tk or Toplevel object (or None)
+`master`: Tk, Toplevel, or None (Optional)
 
-`font_dict`: Optional, font dictionary like an actual Font object
+`font_dict`: dict (Optional) _font dictionary like an actual Font object_
 
-`text`: Optional, text to show in the font selection window
+`text`: str (Optional) _text to show in the font selection window_
 
-`title`: Optional, change the title of the window
+`title`: str (Optional) _changes the title of the window_
 
-`**kwargs`: Optional, pass any other args that might be accepted
+`fixed_only`: bool (Optional), _if set to `True` will only show `Fixed (mono spaced)` fonts_
+
+`**kwargs`: (Optional) _pass any other args that might be accepted_
 
 ## Font Arguments
 
