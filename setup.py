@@ -22,7 +22,7 @@ with open(os.path.join(os.path.dirname(__file__), "README.md")) as fd:
 
 setup(
     name="tkFontSelector",
-    version="1.0.2",
+    version="1.0.3",
     description="Simple font chooser for Tkinter",
     long_description=ext_long_desc,
     long_description_content_type="text/markdown",

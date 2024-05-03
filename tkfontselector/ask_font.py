@@ -1,10 +1,12 @@
+from typing import Union
 from tkfontselector.tkfontselector import FontSelector
+from tkinter import Tk, Toplevel
 
 
 def ask_font(
-    master=None,
-    text="Abcd",
-    title="Font Selector",
+    master: Union[Tk, Toplevel, None] = None,
+    text: str = "Abcd",
+    title: str = "Font Selector",
     fixed_only: bool = False,
     **font_args
 ) -> dict:
