@@ -28,7 +28,7 @@ if __name__ == "__main__":
     label.pack(padx=10, pady=(10, 4))
 
     def callback():
-        font = ask_font(root, title="Choose a font")
+        font = ask_font(root, title="Choose a font", font_args=EXAMPLE_FONT_FAMILY)
         if font:
             # spaces in the family name need to be escaped
             font["family"] = font["family"].replace(" ", "\ ")
