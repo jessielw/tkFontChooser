@@ -3,16 +3,16 @@ Forked from https://github.com/j4321/tkFontChooser and improved. Was going to do
 to clean some things up, but the repo hasn't been active for over 5 years.
 """
 
+import os
 from tkinter import Tk, Toplevel, Listbox, StringVar, BooleanVar, TclError
 from tkinter.ttk import Checkbutton, Frame, Label, Button, Scrollbar, Style, Entry
 from tkinter.font import families, Font
-from locale import getlocale
 from typing import Union, List
 
 from tkfontselector.translations import LANGUAGES
 
 try:
-    lang_code = getlocale()[0][:2]
+    lang_code = os.environ.get("LANG").split("_")[0]
     if lang_code in LANGUAGES:
         TR = LANGUAGES[lang_code]
     else:
