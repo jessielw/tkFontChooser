@@ -7,7 +7,7 @@ def ask_font(
     master: Union[Tk, Toplevel, None] = None,
     text: str = "Abcd",
     title: str = "Font Selector",
-    fixed_only: bool = False,
+    fixed_only: Union[bool, None] = None,
     families_only: bool = False,
     font_args: dict = {},
 ) -> dict:
@@ -21,8 +21,9 @@ def ask_font(
             sample text to be displayed in the Font Selector
         title: str
             dialog title
-        fixed_only: bool
-            Display fixed only families
+        fixed_only: (bool, None)
+            if set to `True` will display mono spaced fonts only, if set to `False`
+            will only show regular fonts, if set to `None` will show everything
         families_only: bool
             Will only display Families part of the UI
         font_dict: dict

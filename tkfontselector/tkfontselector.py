@@ -3,22 +3,18 @@ Forked from https://github.com/j4321/tkFontChooser and improved. Was going to do
 to clean some things up, but the repo hasn't been active for over 5 years.
 """
 
-import os
 from tkinter import Tk, Toplevel, Listbox, StringVar, BooleanVar, TclError
 from tkinter.ttk import Checkbutton, Frame, Label, Button, Scrollbar, Style, Entry
 from tkinter.font import families, Font
 from typing import Union, List
 
 from tkfontselector.translations import LANGUAGES
+from tkfontselector.translations.get_system_locale import system_locale
 
-try:
-    lang_code = os.environ.get("LANG").split("_")[0]
-    if lang_code in LANGUAGES:
-        TR = LANGUAGES[lang_code]
-    else:
-        TR = LANGUAGES["en"]
-except ValueError:
-    TR = LANGUAGES["en"]
+TR = LANGUAGES["en"]
+detect_language = system_locale()
+if detect_language and detect_language in LANGUAGES.keys():
+    TR = LANGUAGES[detect_language]
 
 
 class FontSelector(Toplevel):
@@ -29,7 +25,7 @@ class FontSelector(Toplevel):
         master: Union[Tk, Toplevel] = None,
         text: str = "Abcd",
         title: str = "Font Selector",
-        fixed_only: bool = False,
+        fixed_only: Union[bool, None] = None,
         families_only: bool = False,
         font_dict: dict = {},
         **kwargs
@@ -43,8 +39,9 @@ class FontSelector(Toplevel):
                 text to be displayed in the preview label
             title: str
                 window title
-            fixed_only: bool
-                will display fixed (mono spaced) fonts only
+            fixed_only: (bool, None)
+                if set to `True` will display mono spaced fonts only, if set to `False`
+                will only show regular fonts, if set to `None` will show everything
             families_only: bool
                 will only display the family part of the UI
             font_dict: dict
@@ -75,7 +72,9 @@ class FontSelector(Toplevel):
         self.style.configure("prev.TLabel", background="white")
 
         # --- family list
-        if fixed_only:
+        if fixed_only is None:
+            self.fonts = list(families())
+        elif fixed_only:
             self.fonts = self._get_fixed_families()
         else:
             self.fonts = self._get_non_fixed_families()
