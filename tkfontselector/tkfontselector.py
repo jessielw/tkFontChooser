@@ -71,8 +71,8 @@ class FontSelector(Toplevel):
         # --- variable storing the chosen font
         self.res = ""
 
-        style = Style(self)
-        style.configure("prev.TLabel", background="white")
+        self.style = Style(self)
+        self.style.configure("prev.TLabel", background="white")
 
         # --- family list
         if fixed_only:
@@ -90,7 +90,7 @@ class FontSelector(Toplevel):
         font_dict["underline"] = font_dict.get("underline", False)
         font_dict["overstrike"] = font_dict.get("overstrike", False)
         font_dict["family"] = font_dict.get("family", self.fonts[0].replace("\ ", " "))
-        font_dict["size"] = font_dict.get("size", 10)
+        self.passed_size = font_dict["size"] = font_dict.get("size", 10)
 
         # --- creation of the widgets
         # ------ style parameters (bold, italic ...)
@@ -98,37 +98,37 @@ class FontSelector(Toplevel):
         self.font_family = StringVar(self, " ".join(self.fonts))
         self.font_size = StringVar(self, " ".join(self.sizes))
         self.var_bold = BooleanVar(self, font_dict["weight"] == "bold")
-        b_bold = Checkbutton(
+        self.b_bold = Checkbutton(
             self.options_frame,
             text=TR["Bold"],
             command=self.toggle_bold,
             variable=self.var_bold,
         )
-        b_bold.grid(row=0, sticky="w", padx=4, pady=(4, 2))
+        self.b_bold.grid(row=0, sticky="w", padx=4, pady=(4, 2))
         self.var_italic = BooleanVar(self, font_dict["slant"] == "italic")
-        b_italic = Checkbutton(
+        self.b_italic = Checkbutton(
             self.options_frame,
             text=TR["Italic"],
             command=self.toggle_italic,
             variable=self.var_italic,
         )
-        b_italic.grid(row=1, sticky="w", padx=4, pady=2)
+        self.b_italic.grid(row=1, sticky="w", padx=4, pady=2)
         self.var_underline = BooleanVar(self, font_dict["underline"])
-        b_underline = Checkbutton(
+        self.b_underline = Checkbutton(
             self.options_frame,
             text=TR["Underline"],
             command=self.toggle_underline,
             variable=self.var_underline,
         )
-        b_underline.grid(row=2, sticky="w", padx=4, pady=2)
+        self.b_underline.grid(row=2, sticky="w", padx=4, pady=2)
         self.var_overstrike = BooleanVar(self, font_dict["overstrike"])
-        b_overstrike = Checkbutton(
+        self.b_overstrike = Checkbutton(
             self.options_frame,
             text=TR["Overstrike"],
             variable=self.var_overstrike,
             command=self.toggle_overstrike,
         )
-        b_overstrike.grid(row=3, sticky="w", padx=4, pady=(2, 4))
+        self.b_overstrike.grid(row=3, sticky="w", padx=4, pady=(2, 4))
         # ------ Size and family
         self.var_size = StringVar(self)
         self.entry_family = Entry(
@@ -221,12 +221,10 @@ class FontSelector(Toplevel):
         button_frame = Frame(self)
         button_frame.grid(row=3, column=0, columnspan=5, pady=(0, 10), padx=10)
 
-        Button(button_frame, text="Ok", command=self.ok).grid(
-            row=0, column=0, padx=14, sticky="ew"
-        )
-        Button(button_frame, text=TR["Cancel"], command=self.quit).grid(
-            row=0, column=1, padx=14, sticky="ew"
-        )
+        self.okay_btn = Button(button_frame, text="Ok", command=self.ok)
+        self.okay_btn.grid(row=0, column=0, padx=14, sticky="ew")
+        self.cancel_btn = Button(button_frame, text=TR["Cancel"], command=self.quit)
+        self.cancel_btn.grid(row=0, column=1, padx=14, sticky="ew")
         self.list_family.bind("<<ListboxSelect>>", self.update_entry_family)
         self.list_size.bind("<<ListboxSelect>>", self.update_entry_size, add=True)
         self.list_family.bind("<KeyPress>", self.keypress)
@@ -243,10 +241,28 @@ class FontSelector(Toplevel):
         # bind Ctrl+A to select all instead of go to beginning
         self.bind_class("TEntry", "<Control-a>", self.select_all)
 
+        self._update_widget_font_sizes()
+
         self.wait_visibility(self)
         self.grab_set()
         self.entry_family.focus_set()
         self.lift()
+
+    def _update_widget_font_sizes(self):
+        self._update_tk_widget_font_size()
+        self._update_ttk_widget_font_size()
+
+    def _update_tk_widget_font_size(self):
+        for widget in (
+            self.entry_family,
+            self.entry_size,
+            self.list_family,
+            self.list_size,
+        ):
+            widget.configure(font=(None, self.passed_size))
+
+    def _update_ttk_widget_font_size(self):
+        self.style.configure(".", font=(None, self.passed_size))
 
     def _families_only(self):
         self.entry_family.grid(
