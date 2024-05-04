@@ -8,7 +8,8 @@ def ask_font(
     text: str = "Abcd",
     title: str = "Font Selector",
     fixed_only: bool = False,
-    **font_args
+    families_only: bool = False,
+    font_args: dict = {},
 ) -> dict:
     """
     Open the Font Selector and return a dictionary of the font properties.
@@ -22,6 +23,17 @@ def ask_font(
             dialog title
         fixed_only: bool
             Display fixed only families
+        families_only: bool
+            Will only display Families part of the UI
+        font_dict: dict
+            dictionary, like the one returned by the ``actual`` method of a ``Font`` object:
+                {'family': str,
+                    'size': int,
+                    'weight': 'bold'/'normal',
+                    'slant': 'italic'/'roman',
+                    'underline': bool,
+                    'overstrike': bool}
+        kwargs: dict
 
     Font arguments:
         family: str
@@ -48,6 +60,6 @@ def ask_font(
              'overstrike': bool}
 
     """
-    chooser = FontSelector(master, font_args, text, title, fixed_only)
+    chooser = FontSelector(master, text, title, fixed_only, families_only, font_args)
     chooser.wait_window(chooser)
     return chooser.get_res()

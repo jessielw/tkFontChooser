@@ -27,10 +27,11 @@ class FontSelector(Toplevel):
     def __init__(
         self,
         master: Union[Tk, Toplevel] = None,
-        font_dict: dict = {},
         text: str = "Abcd",
         title: str = "Font Selector",
         fixed_only: bool = False,
+        families_only: bool = False,
+        font_dict: dict = {},
         **kwargs
     ):
         """
@@ -38,6 +39,14 @@ class FontSelector(Toplevel):
         Arguments:
             master: Tk or Toplevel instance
                 master window
+            text: str
+                text to be displayed in the preview label
+            title: str
+                window title
+            fixed_only: bool
+                will display fixed (mono spaced) fonts only
+            families_only: bool
+                will only display the family part of the UI
             font_dict: dict
                 dictionary, like the one returned by the ``actual`` method of a ``Font`` object:
                     {'family': str,
@@ -46,10 +55,6 @@ class FontSelector(Toplevel):
                      'slant': 'italic'/'roman',
                      'underline': bool,
                      'overstrike': bool}
-            text: str
-                text to be displayed in the preview label
-            title: str
-                window title
             kwargs: dict
                 additional keyword arguments to be passed to ``Toplevel.__init__``
         """
@@ -89,12 +94,12 @@ class FontSelector(Toplevel):
 
         # --- creation of the widgets
         # ------ style parameters (bold, italic ...)
-        options_frame = Frame(self, relief="groove", borderwidth=2)
+        self.options_frame = Frame(self, relief="groove", borderwidth=2)
         self.font_family = StringVar(self, " ".join(self.fonts))
         self.font_size = StringVar(self, " ".join(self.sizes))
         self.var_bold = BooleanVar(self, font_dict["weight"] == "bold")
         b_bold = Checkbutton(
-            options_frame,
+            self.options_frame,
             text=TR["Bold"],
             command=self.toggle_bold,
             variable=self.var_bold,
@@ -102,7 +107,7 @@ class FontSelector(Toplevel):
         b_bold.grid(row=0, sticky="w", padx=4, pady=(4, 2))
         self.var_italic = BooleanVar(self, font_dict["slant"] == "italic")
         b_italic = Checkbutton(
-            options_frame,
+            self.options_frame,
             text=TR["Italic"],
             command=self.toggle_italic,
             variable=self.var_italic,
@@ -110,7 +115,7 @@ class FontSelector(Toplevel):
         b_italic.grid(row=1, sticky="w", padx=4, pady=2)
         self.var_underline = BooleanVar(self, font_dict["underline"])
         b_underline = Checkbutton(
-            options_frame,
+            self.options_frame,
             text=TR["Underline"],
             command=self.toggle_underline,
             variable=self.var_underline,
@@ -118,7 +123,7 @@ class FontSelector(Toplevel):
         b_underline.grid(row=2, sticky="w", padx=4, pady=2)
         self.var_overstrike = BooleanVar(self, font_dict["overstrike"])
         b_overstrike = Checkbutton(
-            options_frame,
+            self.options_frame,
             text=TR["Overstrike"],
             variable=self.var_overstrike,
             command=self.toggle_overstrike,
@@ -133,7 +138,7 @@ class FontSelector(Toplevel):
         )
         self.entry_size = Entry(
             self,
-            width=4,
+            width=8,
             validate="key",
             textvariable=self.var_size,
             validatecommand=(self._validate_size, "%d", "%P", "%V"),
@@ -151,11 +156,14 @@ class FontSelector(Toplevel):
             listvariable=self.font_size,
             highlightthickness=0,
             exportselection=False,
+            width=8,
         )
-        scroll_family = Scrollbar(
+        self.scroll_family = Scrollbar(
             self, orient="vertical", command=self.list_family.yview
         )
-        scroll_size = Scrollbar(self, orient="vertical", command=self.list_size.yview)
+        self.scroll_size = Scrollbar(
+            self, orient="vertical", command=self.list_size.yview
+        )
         self.preview_font = Font(self, **font_dict)
         if len(text) > 30:
             text = text[:30]
@@ -169,8 +177,8 @@ class FontSelector(Toplevel):
         )
 
         # --- widget configuration
-        self.list_family.configure(yscrollcommand=scroll_family.set)
-        self.list_size.configure(yscrollcommand=scroll_size.set)
+        self.list_family.configure(yscrollcommand=self.scroll_family.set)
+        self.list_size.configure(yscrollcommand=self.scroll_size.set)
 
         self.entry_family.insert(0, font_dict["family"])
         self.entry_family.selection_clear()
@@ -194,19 +202,10 @@ class FontSelector(Toplevel):
             # size not in list
             pass
 
-        self.entry_family.grid(
-            row=0, column=0, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0)
-        )
-        self.entry_size.grid(row=0, column=2, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0))
-        self.list_family.grid(
-            row=1, column=0, sticky="nsew", pady=(1, 10), padx=(10, 0)
-        )
-        self.list_size.grid(row=1, column=2, sticky="nsew", pady=(1, 10), padx=(10, 0))
-        scroll_family.grid(row=1, column=1, sticky="nsw", pady=(1, 10))
-        scroll_size.grid(row=1, column=3, sticky="nsw", pady=(1, 10))
-        options_frame.grid(
-            row=0, column=4, rowspan=2, padx=10, pady=10, ipadx=10, sticky="nsew"
-        )
+        if families_only:
+            self._families_only()
+        else:
+            self._full_ui()
 
         self.preview.grid(
             row=2,
@@ -248,6 +247,34 @@ class FontSelector(Toplevel):
         self.grab_set()
         self.entry_family.focus_set()
         self.lift()
+
+    def _families_only(self):
+        self.entry_family.grid(
+            row=0, column=0, columnspan=4, sticky="ews", pady=(10, 1), padx=(10, 10)
+        )
+        self.list_family.grid(
+            row=1, column=0, columnspan=3, sticky="nsew", pady=(1, 10), padx=(10, 0)
+        )
+        self.scroll_family.grid(
+            row=1, column=3, sticky="nsw", pady=(1, 10), padx=(0, 10)
+        )
+
+    def _full_ui(self):
+        self.entry_family.grid(
+            row=0, column=0, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0)
+        )
+        self.entry_size.grid(
+            row=0, column=2, columnspan=2, sticky="ews", pady=(10, 1), padx=(10, 0)
+        )
+        self.list_family.grid(
+            row=1, column=0, sticky="nsew", pady=(1, 10), padx=(10, 0)
+        )
+        self.list_size.grid(row=1, column=2, sticky="nsew", pady=(1, 10), padx=(10, 0))
+        self.scroll_family.grid(row=1, column=1, sticky="nsw", pady=(1, 10))
+        self.scroll_size.grid(row=1, column=3, sticky="nsw", pady=(1, 10))
+        self.options_frame.grid(
+            row=0, column=4, rowspan=2, padx=10, pady=10, ipadx=10, sticky="nsew"
+        )
 
     def select_all(self, event):
         """Select all entry content."""
