@@ -49,7 +49,7 @@ dictionary is similar to the one returned by the `actual` method of a tkinter
 
 `title`: str (Optional) _changes the title of the window_
 
-`fixed_only`: bool (Optional), _if set to `True` will only show `Fixed (mono spaced)` fonts_
+`fixed_only`: (bool, None) (Optional), _if set to `True` will display mono spaced fonts only, if set to `False` will only show regular fonts, if set to `None` will show everything_
 
 `families_only`: bool (Optional), _if set to `True` will only show Font Families part of the UI_
 
