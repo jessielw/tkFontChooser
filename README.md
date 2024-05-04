@@ -45,13 +45,15 @@ dictionary is similar to the one returned by the `actual` method of a tkinter
 
 `master`: Tk, Toplevel, or None (Optional)
 
-`font_dict`: dict (Optional) _font dictionary like an actual Font object_
-
 `text`: str (Optional) _text to show in the font selection window_
 
 `title`: str (Optional) _changes the title of the window_
 
 `fixed_only`: bool (Optional), _if set to `True` will only show `Fixed (mono spaced)` fonts_
+
+`families_only`: bool (Optional), _if set to `True` will only show Font Families part of the UI_
+
+`font_dict`: dict (Optional) _font dictionary like an actual Font object_
 
 `**kwargs`: (Optional) _pass any other args that might be accepted_
 
@@ -72,6 +74,17 @@ dictionary is similar to the one returned by the `actual` method of a tkinter
 ## Example
 
 ```python
+EXAMPLE_FONT_FAMILY = {
+    "family": "Comic Sans MS",
+    "size": 10,
+    "weight": "normal",
+    "slant": "roman",
+    "underline": 0,
+    "overstrike": 0,
+}
+
+
+if __name__ == "__main__":
     """Example Usage"""
     root = Tk()
     style = ttk.Style(root)
@@ -87,7 +100,7 @@ dictionary is similar to the one returned by the `actual` method of a tkinter
     label.pack(padx=10, pady=(10, 4))
 
     def callback():
-        font = ask_font(root, title="Choose a font")
+        font = ask_font(root, title="Choose a font", font_args=EXAMPLE_FONT_FAMILY)
         if font:
             # spaces in the family name need to be escaped
             font["family"] = font["family"].replace(" ", "\ ")
