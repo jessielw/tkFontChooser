@@ -1,5 +1,4 @@
 import unittest
-import logging
 from tkfontselector import FontSelector, ask_font
 from tkinter import Toplevel, ttk
 from tkinter import font as tkFont
@@ -7,7 +6,6 @@ from tkinter import font as tkFont
 
 class BaseWidgetTest(unittest.TestCase):
     def setUp(self):
-        logging.basicConfig(filename="/tmp/test.log", level=logging.DEBUG)
         self.window = Toplevel()
         self.window.update()
 
@@ -33,7 +31,7 @@ class TestFontSelector(BaseWidgetTest):
     def test_FontSelector_init(self):
         FontSelector(
             self.window,
-            {"family": "Arial", "weight": "bold", "slant": "italic"},
+            font_dict={"family": "Arial", "weight": "bold", "slant": "italic"},
             text="Abcd" * 20,
             title="Test",
         )
@@ -46,7 +44,7 @@ class TestFontSelector(BaseWidgetTest):
             "size": 27,
             "slant": "italic",
         }
-        fc = FontSelector(self.window, props)
+        fc = FontSelector(self.window, font_dict=props)
         self.window.update()
 
         e = ttk.Entry(self.window)
@@ -60,7 +58,9 @@ class TestFontSelector(BaseWidgetTest):
         font = tkFont.Font(self.window, **props)
         self.assertEqual(fc.get_res(), font.actual())
         # ok() destroys the toplevel
-        fc = FontSelector(self.window, {"family": "TkDefaultFont", "size": 20})
+        fc = FontSelector(
+            self.window, font_dict={"family": "TkDefaultFont", "size": 20}
+        )
         self.window.update()
         i = fc.list_family.curselection()[0]
         self.assertEqual(fc.fonts[i], "TkDefaultFont")
@@ -123,7 +123,6 @@ class TestFontSelector(BaseWidgetTest):
         self.assertEqual(fc.list_family.curselection()[0], 0)
 
     def test_askfont(self):
-
         def test(event):
             event.widget.ok()
             fontprops = event.widget.get_res()
@@ -145,10 +144,16 @@ class TestFontSelector(BaseWidgetTest):
         self.window.after(100, events)
         ask_font(
             master=self.window,
-            family="TkDefaultFont",
-            size=20,
-            slant="italic",
-            weight="bold",
-            underline=True,
-            overstrike=True,
+            font_args={
+                "family": "TkDefaultFont",
+                "size": 20,
+                "slant": "italic",
+                "weight": "bold",
+                "underline": True,
+                "overstrike": True,
+            },
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
