@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tkfontselector"
-version = "1.0.10"
+version = "1.0.11"
 description = "Tkinter Font Selector"
 authors = ["jlw4049 <jlw_4049@hotmail.com>"]
 license = "MIT"
